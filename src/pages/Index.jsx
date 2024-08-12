@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
@@ -13,12 +14,17 @@ const data = [
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("")
+  const navigate = useNavigate()
 
   const filteredData = data.filter((employee) =>
     Object.values(employee).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   )
+
+  const handleRowClick = (employeeId) => {
+    navigate(`/employee/${employeeId}`)
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -48,7 +54,11 @@ const Index = () => {
         </TableHeader>
         <TableBody>
           {filteredData.map((employee) => (
-            <TableRow key={employee.id}>
+            <TableRow
+              key={employee.id}
+              onClick={() => handleRowClick(employee.id)}
+              className="cursor-pointer hover:bg-gray-100"
+            >
               <TableCell>{employee.name}</TableCell>
               <TableCell>{employee.email}</TableCell>
               <TableCell>{employee.role}</TableCell>
